@@ -39,10 +39,10 @@ let updateProduct=(productId,changes,cb)=>{
     }else if(changes.productName &&changes.productName.trim().length==0){
         cb({code:400,msg:'product Name is not valid'});
         return;
-    }else if( changes.price && (typeof (changes.price)!=='number' || isNaN(changes.price))){
+    }else if( changes.price && (typeof (changes.price)!=='number' || isNaN(changes.price)|| changes.price<0)){
         cb({code:400,msg:'product price is not valid'});
         return;
-    }else if(changes.quantityAvailable&&(typeof (changes.quantityAvailable)!=='number' || isNaN(changes.quantityAvailable))){
+    }else if(changes.quantityAvailable&&(typeof (changes.quantityAvailable)!=='number' || isNaN(changes.quantityAvailable|| changes.quantityAvailable<0))){
         cb({code:400,msg:'product quantity is not valid'})
         return;
     }
@@ -88,6 +88,25 @@ let deleteProduct=(productId,cb)=>{
     }
 }
 
+let getProduct=(productId,cb)=>{
+        if(!productId){
+            cb({code:400,msg:'invalid productId'});
+            return;
+        }
+        let targetProduct=null;
+       products.forEach((product)=>{
+            if(product.productId==productId){
+                targetProduct=product;
+            }
+        });
+        if(targetProduct){
+            cb(null,targetProduct);
+        }else{
+            cb({code:404,msg:'no product with given id'});
+        }
+    }
+
+
 let allProducts=(cb)=>{
     cb(null,products)
 }
@@ -96,5 +115,6 @@ module.exports={
     addProduct,
     updateProduct,
     deleteProduct,
-    allProducts
+    allProducts,
+    getProduct
 }
