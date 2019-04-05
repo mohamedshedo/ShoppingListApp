@@ -1,6 +1,6 @@
 # ShoppingListApp
 
-##Run Project
+## Run Project
 ```
 npm start
 ```
