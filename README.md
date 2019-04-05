@@ -1,5 +1,6 @@
 # ShoppingListApp
 
 ##Run Project
-```npm start
+```
+npm start
 ```
