@@ -52,8 +52,6 @@ add product to the list
   adding the product details in request's body like this:
    {
         "productId": 1,
-        "productName": "added item name ",
-        "price": 1,
         "requiredQuantity":2
     }
 ```
