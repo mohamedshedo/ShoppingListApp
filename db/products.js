@@ -1,29 +1,29 @@
-const products= require('./products.json');
+let products= require('./products.json');
 
 
 let addProduct=(newProduct,cb)=>{
-    if(!newProduct&& !newProduct.productId && !newProduct.productName && !newProduct.quantityAvailable && !newProduct.price){
-         cb("Missing Data")
+    if(!newProduct|| !newProduct.productId || !newProduct.productName || !newProduct.quantityAvailable || !newProduct.price){
+         cb({code:400,msg:"Missing Data"})
          return;
     }
     else{
         if(typeof (newProduct.productId)!=='number' || isNaN(newProduct.productId)){
-            cb('product Id in not valid');
+            cb({code:400,msg:'product Id in not valid'});
             return;
         }else if(newProduct.productName.trim().length==0){
-            cb('product Name is not valid');
+            cb({code:400,msg:'product Name is not valid'});
             return;
         }else if(typeof (newProduct.price)!=='number' || isNaN(newProduct.price)){
-            cb('product price is not valid');
+            cb({code:400,msg:'product price is not valid'});
             return;
         }else if(typeof (newProduct.quantityAvailable)!=='number' || isNaN(newProduct.quantityAvailable)){
-            cb('product quantity is not valid')
+            cb({code:400,msg:'product quantity is not valid'})
             return;
         }
 
         for(product of products){
             if(product.productId===newProduct.productId){
-                cb("product Id in already exists");
+                cb({code:400,msg:"product Id in already exists"});
                 return;
             }
         }
@@ -34,45 +34,57 @@ let addProduct=(newProduct,cb)=>{
 
 let updateProduct=(productId,changes,cb)=>{
     if(!productId){
-        cb('invalid productId');
+        cb({code:400,msg:'invalid productId'});
+        return;
+    }else if(changes.productName &&changes.productName.trim().length==0){
+        cb({code:400,msg:'product Name is not valid'});
+        return;
+    }else if( changes.price && (typeof (changes.price)!=='number' || isNaN(changes.price))){
+        cb({code:400,msg:'product price is not valid'});
+        return;
+    }else if(changes.quantityAvailable&&(typeof (changes.quantityAvailable)!=='number' || isNaN(changes.quantityAvailable))){
+        cb({code:400,msg:'product quantity is not valid'})
         return;
     }
+
     let changesKeys=Object.keys(changes);
-    if(changes.length>0){
+    if(changesKeys.length>0){
     for(product of products){
-        if(product.productId===productId){
+        if(product.productId==productId){
             for( change of changesKeys){
-                product[change]=changes[change]
+                if(change!='productId'){
+                    product[change]=changes[change];
+                }
             }
             cb(null,product);
             return;
         }
     }
-    cb('theres no product with given id');
+    cb({code:404,msg:'theres no product with given id'});
     }else{
-    cb('theres no changes provided')
+    cb({code:400,msg:'theres no changes provided'})
     }
 }
 
 let deleteProduct=(productId,cb)=>{
     if(!productId){
-        cb('invalid productId');
+        cb({code:400,msg:'invalid productId'});
         return;
     }
     let deletedProduct=null;
-    products.filter((product)=>{
+    products= products.filter((product)=>{
         if(product.productId==productId){
             deletedProduct=product;
-            return true;
-        }else{
             return false;
+        }else{
+            return true;
         }
     });
 
     if(deletedProduct){
         cb(null,deletedProduct);
     }else{
-        cb('no product with given id');
+        cb({code:404,msg:'no product with given id'});
     }
 }
 
