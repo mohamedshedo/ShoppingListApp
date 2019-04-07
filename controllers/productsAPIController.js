@@ -21,7 +21,6 @@ module.exports=(app)=>{
     app.patch('/product/:id',(req,res)=>{
         let reqBody= _.pick(req.body,[,'productName','price','quantityAvailable']);
         let productId=req.params.id;
-        console.log(productId);
         products.updateProduct(productId,reqBody,(err,result)=>{
             if(err){
                 res.status(err.code).send(err.msg);

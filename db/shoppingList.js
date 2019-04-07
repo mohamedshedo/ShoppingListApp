@@ -101,8 +101,6 @@ let getShoppingCard=(cb)=>{
     for(item of updatedProducts){
         shoppingCard.totalPrices+=(item.price*item.requiredQuantity);
     }
-    console.log(updatedProducts);
-    console.log(shoppingCard);
     shoppingCard.totalItems=updatedProducts;
     cb(null,shoppingCard);
 }
