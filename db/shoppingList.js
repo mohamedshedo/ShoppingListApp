@@ -16,7 +16,7 @@ let addShoppingProduct=(productId,requiredQuantity,cb)=>{
         if(err){
             cb(err)
         }else{
-            if(result.quantityAvailable>0 && result.quantityAvailable-requiredQuantity>0){
+            if(result.quantityAvailable>0 && result.quantityAvailable-requiredQuantity>=0){
                 products.updateProduct(
                     productId,
                     {quantityAvailable:result.quantityAvailable-requiredQuantity},
@@ -87,7 +87,7 @@ let getShoppingCard=(cb)=>{
     }
     shoppingCard.totalPrices=0;
     for(item of updatedProducts){
-        shoppingCard.totalPrices+=item.price;
+        shoppingCard.totalPrices+=(item.price*item.requiredQuantity);
     }
     console.log(updatedProducts);
     console.log(shoppingCard);
@@ -95,8 +95,25 @@ let getShoppingCard=(cb)=>{
     cb(null,shoppingCard);
 }
 
+let clearShoppingCard=(cb)=>{
+    for(item of shoppingCard.totalItems){
+        products.getProduct(item.productId,(err,result)=>{
+            if(!err){
+                products.updateProduct(item.productId,{quantityAvailable:item.requiredQuantity+result.quantityAvailable},(err,result)=>{
+                    
+                })
+            }
+        });
+    }
+
+    shoppingCard.totalItems=[];
+    shoppingCard.totalPrices=0;
+    cb(null,shoppingCard);
+}
+
 module.exports={
     addShoppingProduct,
     removeShoppingProduct,
-    getShoppingCard
+    getShoppingCard,
+    clearShoppingCard
 }

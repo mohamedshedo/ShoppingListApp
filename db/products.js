@@ -1,4 +1,4 @@
-let products= require('./products.json');
+const products= require('./products.json');
 
 
 let addProduct=(newProduct,cb)=>{
