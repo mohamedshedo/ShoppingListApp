@@ -30,5 +30,15 @@ module.exports=(app)=>{
                 res.status(err.code).send(err.msg);
             }
         })
+    });
+
+    app.delete('/shoppingCard',(req,res)=>{
+        shoppingCard.clearShoppingCard((err,result)=>{
+            if(!err){
+                res.send(result);
+            }else{
+                res.status(500).send(err);
+            }
+        })
     })
 };

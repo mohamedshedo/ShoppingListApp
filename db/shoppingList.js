@@ -22,12 +22,24 @@ let addShoppingProduct=(productId,requiredQuantity,cb)=>{
                     {quantityAvailable:result.quantityAvailable-requiredQuantity},
                     (err,result)=>{
                         if(!err){
-                        shoppingCard.totalItems.push({
-                            productId,
-                            requiredQuantity,
-                            price:result.price
-                        });
-                        shoppingCard.totalPrices+=result.price;
+                            productIsAlreadyExists=false;
+                            for(item of shoppingCard.totalItems){
+                                if(item.productId== productId){
+                                    item.requiredQuantity+=requiredQuantity;
+                                    productIsAlreadyExists=true;
+                                    break;
+                                }
+                            }
+
+                            if(!productIsAlreadyExists){
+                                shoppingCard.totalItems.push({
+                                    productId,
+                                    requiredQuantity,
+                                    price:result.price
+                                });
+                            }
+                       
+                        shoppingCard.totalPrices+=(result.price*requiredQuantity);
                         cb(null,shoppingCard);
                         }else{
                             cb(err)
@@ -50,7 +62,7 @@ let removeShoppingProduct=(productId,cb)=>{
     shoppingCard.totalItems=shoppingCard.totalItems.filter((product)=>{
         if(product.productId==productId){
             deletedProduct=product;
-            shoppingCard.totalPrices-=product.price;
+            shoppingCard.totalPrices-=(product.price*product.requiredQuantity);
             return false;
         }else{
             return true;

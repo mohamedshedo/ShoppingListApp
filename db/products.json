@@ -1,11 +1,5 @@
 [
     {
-        "productId":0,
-        "productName":"Twix",
-        "quantityAvailable":6,
-        "price":10.00
-    },
-    {
         "productId":1,
         "productName":"Pepsi",
         "quantityAvailable":4,
@@ -22,5 +16,11 @@
         "productName":"Persil",
         "quantityAvailable":2,
         "price":20.00
+    },
+    {
+        "productId":4,
+        "productName":"Twix",
+        "quantityAvailable":6,
+        "price":10.00
     }
 ]
